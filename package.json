@@ -1,0 +1,27 @@
+{
+  "name": "mini-router",
+  "version": "0.1.0",
+  "description": "Yet another mini router library",
+  "main": "src/router.js",
+  "scripts": {
+    "test": "echo \"Error: no test specified\" && exit 1",
+    "prepublish": "webpack src/router.js dist/router.js --output-library Router --output-library-target var && uglifyjs -c -m -o dist/router.min.js dist/router.js"
+  },
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/markmarijnissen/mini-router.git"
+  },
+  "keywords": [
+    "router"
+  ],
+  "author": "Mark Marijnissen",
+  "license": "MIT",
+  "bugs": {
+    "url": "https://github.com/markmarijnissen/mini-router/issues"
+  },
+  "homepage": "https://github.com/markmarijnissen/mini-router",
+  "dependencies": {
+    "dom-delegate": "^2.0.3",
+    "polyfill-function-prototype-bind": "0.0.1"
+  }
+}
