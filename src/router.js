@@ -8,7 +8,10 @@ function Router(options) {
     var self = this;
     options = options || [];
     this._routes = [];
-    this.currentRoute = null;
+    this.current = {
+      route: null,
+      params: null
+    };
 
     if(options.routes) {
       for(var id in options.routes){
@@ -132,8 +135,8 @@ Router.prototype.set = function RouterSet(url,silent) {
         params[key] = matches[key];
       });
       this._routes[i].callback(params,this._routes[i].route);
-      this.currentRoute = this._routes[i].route;
-      this.currentParams = params;
+      this.current.route = this._routes[i].route;
+      this.current.params = params;
     }
     i--;
   }
