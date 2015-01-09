@@ -1,11 +1,14 @@
 {
   "name": "mini-router",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "description": "Yet another mini router library",
-  "main": "src/router.js",
+  "main": "router.js",
   "scripts": {
     "test": "echo \"Error: no test specified\" && exit 1",
-    "prepublish": "webpack src/router.js dist/router.js --output-library Router --output-library-target var && uglifyjs -c -m -o dist/router.min.js dist/router.js"
+    "webpack":"webpack clickInterceptor.js dist/click-interceptor.js --output-library ClickInterceptor --output-library-target var && cp router.js dist/mini-router.core.js",
+    "uglify": "uglifyjs -c -m -o dist/click-interceptor.min.js dist/click-interceptor.js && uglifyjs -c -m -o dist/mini-router.core.min.js dist/mini-router.core.js",
+    "complete":"uglifyjs -b -o dist/mini-router.js dist/click-interceptor.js dist/mini-router.core.js && uglifyjs -o dist/mini-router.min.js dist/mini-router.js",
+    "prepublish": "npm run webpack && npm run uglify && npm run complete"
   },
   "repository": {
     "type": "git",

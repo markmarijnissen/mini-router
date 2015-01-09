@@ -7,13 +7,21 @@ npm install mini-router
 bower install mini-router
 ```
 
+## Files
+
+* `dist/click-interceptor.js` - ClickInterceptor (standalone library, exported as global var)
+* `dist/mini-router.core.js` - Router without ClickInterceptor (standalone library)
+* `dist/mini-router.js` - Router + ClickInterceptor (standalone library)
+* `router.js` - CommonJS module (use with webpack or browserify)
+* `ClickInterceptor.js` - CommonJS module 
+
 ## Usage
 ```javascript
 var router = new Router({
 	html5: true // default true if browser supports it
+	base: '' // optional base url (gets stripped away when routing)
 	routes: { '/some/route': callback } // optional routes
-	startClickIntercept: fn // optional custom click intercept handler
-	stopClickIntercept: fn // optional destruction of your custom click intercept handler
+	clickInterceptor: ClickInterceptor // override or set the ClickInterceptor
 })
 
 // Define and handle route. You can use :named parameters.
@@ -21,6 +29,7 @@ router.add('/route/:param1',function(params){
 	// handle your route
 	console.log(params.param1);
 });
+// Note: If you define multiple routes with the same name, only the latest callback is called!
 
 // Manually set location and fire route handler
 router.set(url)
@@ -32,6 +41,16 @@ router.normalize('http://yourwebsite.com/some/path/') // /some/path
 router.normalize('/some/path/') // /some/path
 // - add prepending slash
 router.normalize('some/path') // /some/path
+
+// You can also only use the click interceptor.
+// It translates link-clicks to hash-changes or html5 popState()
+ClickInterceptor({
+	html5: true,
+	base: '',
+	normalize: function(url){
+		return url;
+	}
+});
 ```
 
 ## Why?
@@ -44,6 +63,7 @@ So I wrote this one!
 
 ## Changelog
 
+* 0.2.0: Split Router into Router + ClickInterceptor. Some minor improvements.
 * 0.1.0: Initial release
 
 ## Contribute

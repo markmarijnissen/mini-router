@@ -1,9 +1,3 @@
-require('polyfill-function-prototype-bind');
-var bodyDelegate = require('dom-delegate')();
-document.addEventListener('DOMContentLoaded',function(){
-  bodyDelegate.root(document.body);
-},false);
-
 function Router(options) {
     var self = this;
     options = options || [];
@@ -29,13 +23,8 @@ function Router(options) {
     if(typeof options.callback === 'function') {
       this._callback = options.callback;
     }
-
-    // override default click intercept, if wanted
-    if(typeof options.startClickIntercept === 'function'){
-      self.startClickIntercept = startClickIntercept.bind(self);
-    }
-    if(typeof options.stopClickIntercept === 'function'){
-      self.stopClickIntercept = stopClickIntercept.bind(self);
+    if(options.clickInterceptor || window.ClickInterceptor){
+      this.setClickInterceptor(options.clickInterceptor || window.ClickInterceptor);
     }
 
     if(typeof options.html5 === 'undefined') options.html5 = true;
@@ -49,9 +38,6 @@ function Router(options) {
       window.addEventListener('hashchange',function RouterOnHashChange(ev){
         self.set(window.location.hash.substr(1),true);
       });
-    }
-    if(this.html5 || options.interceptClicks){
-      self.startClickIntercept();
     }
 }
 
@@ -109,6 +95,10 @@ Router.prototype.add = function RouterAdd(route,callback) {
   return route;
 };
 
+Router.prototype.setClickInterceptor = function(interceptor){
+  interceptor(this);
+};
+
 Router.prototype.setCallback = function RouterSetCallback(fn){
   this._callback = fn;
 };
@@ -147,29 +137,8 @@ Router.prototype.set = function RouterSet(url,silent) {
   return found;
 };
 
-Router.prototype.interceptClick = function(ev){
-  var url = ev.target.getAttribute('href');
-  if(url){
-    url = this.normalize(url);
-    if(url.substr(0,4) !== 'http') {
-      if(this.html5){
-        history.pushState({url:url},url,url);
-      } else {
-        location.hash = url;
-      }
-      ev.preventDefault();
-    }
-  }
-};
-
-Router.prototype.startClickIntercept = function(){
-  bodyDelegate.on('click','a',this.interceptClick.bind(this));
-  window.del = bodyDelegate;
-};
-
-
-Router.prototype.stopClickIntercept = function(){
-  bodyDelegate.destroy();
-};
-
-module.exports = Router;
+if(module) {
+  module.exports = Router;
+} else {
+  window.Router = Router;
+}
