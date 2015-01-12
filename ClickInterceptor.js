@@ -4,7 +4,8 @@ var bodyDelegate = require('dom-delegate')(document.body);
 var options = {
   html5: false,
   base: '',
-  normalize: function normalize(url) { return url; }
+  normalize: function normalize(url) { return url; },
+  set: function(url){}
 };
 
 document.addEventListener('DOMContentLoaded',function(){
@@ -17,7 +18,11 @@ function clickHandler(ev){
     url = options.normalize(url);
     if(url.substr(0,4) !== 'http') {
       if(options.html5){
-        history.pushState({url:url},url,url);
+        if(options.set) {
+          options.set(url);
+        } else {
+          history.pushState({url:url},url,url);
+        }
       } else {
         location.hash = url;
       }

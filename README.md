@@ -49,7 +49,8 @@ ClickInterceptor({
 	base: '',
 	normalize: function(url){
 		return url;
-	}
+	},
+	set: function(url) { } // callback function to set URL of the router in HTML5 mode
 });
 ```
 
@@ -63,6 +64,7 @@ So I wrote this one!
 
 ## Changelog
 
+* 0.4.0: Fixed ClickInterceptor bug with HTML5 (there is no `onpushstate` listener, so explicitly call `router.set(url)`)
 * 0.3.0: Fixed some versioning issues with NPM and Bower
 * 0.2.0: Split Router into Router + ClickInterceptor. Some minor improvements.
 * 0.1.0: Initial release
