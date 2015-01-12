@@ -46,10 +46,10 @@ Router.prototype.normalize = function(url){
   if(url[0] === '#') {
     url = url.substr(1);
   }
-  if(url.startsWith(location.origin)){
+  if(url.substr(0,location.origin.length) === location.origin){
     url = url.substr(location.origin.length);
   }
-  if(url.startsWith(this.base)){
+  if(url.substr(0,this.base.length) === this.base){
     url = url.substr(this.base.length);
   }
   if(url[0] !== '/') url = '/' + url;
