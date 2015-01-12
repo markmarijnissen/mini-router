@@ -16,14 +16,15 @@ var ClickInterceptor = function(modules) {
     __webpack_require__.p = "";
     return __webpack_require__(0);
 }([ function(module, exports, __webpack_require__) {
-    __webpack_require__(1);
-    var bodyDelegate = __webpack_require__(2)(document.body);
+    __webpack_require__(2);
+    var bodyDelegate = __webpack_require__(1)(document.body);
     var options = {
         html5: false,
         base: "",
         normalize: function normalize(url) {
             return url;
-        }
+        },
+        set: function(url) {}
     };
     document.addEventListener("DOMContentLoaded", function() {
         bodyDelegate.root(document.body);
@@ -34,9 +35,13 @@ var ClickInterceptor = function(modules) {
             url = options.normalize(url);
             if (url.substr(0, 4) !== "http") {
                 if (options.html5) {
-                    history.pushState({
-                        url: url
-                    }, url, url);
+                    if (options.set) {
+                        options.set(url);
+                    } else {
+                        history.pushState({
+                            url: url
+                        }, url, url);
+                    }
                 } else {
                     location.hash = url;
                 }
@@ -57,6 +62,13 @@ var ClickInterceptor = function(modules) {
     window.ClickInterceptor = ClickInterceptor;
     module.exports = ClickInterceptor;
 }, function(module, exports, __webpack_require__) {
+    "use strict";
+    var Delegate = __webpack_require__(3);
+    module.exports = function(root) {
+        return new Delegate(root);
+    };
+    module.exports.Delegate = Delegate;
+}, function(module, exports, __webpack_require__) {
     if (!Function.prototype.bind) {
         Function.prototype.bind = function(oThis) {
             if (typeof this !== "function") {
@@ -70,13 +82,6 @@ var ClickInterceptor = function(modules) {
             return fBound;
         };
     }
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    var Delegate = __webpack_require__(3);
-    module.exports = function(root) {
-        return new Delegate(root);
-    };
-    module.exports.Delegate = Delegate;
 }, function(module, exports, __webpack_require__) {
     "use strict";
     module.exports = Delegate;
@@ -302,9 +307,6 @@ function Router(options) {
     if (typeof options.callback === "function") {
         this._callback = options.callback;
     }
-    if (options.clickInterceptor || window.ClickInterceptor) {
-        this.setClickInterceptor(options.clickInterceptor || window.ClickInterceptor);
-    }
     if (typeof options.html5 === "undefined") options.html5 = true;
     if (options.html5 === true && "onpopstate" in window) {
         this.html5 = true;
@@ -316,6 +318,9 @@ function Router(options) {
         window.addEventListener("hashchange", function RouterOnHashChange(ev) {
             self.set(window.location.hash.substr(1), true);
         });
+    }
+    if (options.clickInterceptor || window.ClickInterceptor) {
+        this.setClickInterceptor(options.clickInterceptor || window.ClickInterceptor);
     }
 }
 

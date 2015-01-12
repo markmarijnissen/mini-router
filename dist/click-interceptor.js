@@ -45,13 +45,14 @@ var ClickInterceptor =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(1);
-	var bodyDelegate = __webpack_require__(2)(document.body);
+	__webpack_require__(2);
+	var bodyDelegate = __webpack_require__(1)(document.body);
 
 	var options = {
 	  html5: false,
 	  base: '',
-	  normalize: function normalize(url) { return url; }
+	  normalize: function normalize(url) { return url; },
+	  set: function(url){}
 	};
 
 	document.addEventListener('DOMContentLoaded',function(){
@@ -64,7 +65,11 @@ var ClickInterceptor =
 	    url = options.normalize(url);
 	    if(url.substr(0,4) !== 'http') {
 	      if(options.html5){
-	        history.pushState({url:url},url,url);
+	        if(options.set) {
+	          options.set(url);
+	        } else {
+	          history.pushState({url:url},url,url);
+	        }
 	      } else {
 	        location.hash = url;
 	      }
@@ -93,6 +98,31 @@ var ClickInterceptor =
 /* 1 */
 /***/ function(module, exports, __webpack_require__) {
 
+	/*jshint browser:true, node:true*/
+
+	'use strict';
+
+	/**
+	 * @preserve Create and manage a DOM event delegator.
+	 *
+	 * @version 0.3.0
+	 * @codingstandard ftlabs-jsv2
+	 * @copyright The Financial Times Limited [All Rights Reserved]
+	 * @license MIT License (see LICENSE.txt)
+	 */
+	var Delegate = __webpack_require__(3);
+
+	module.exports = function(root) {
+	  return new Delegate(root);
+	};
+
+	module.exports.Delegate = Delegate;
+
+
+/***/ },
+/* 2 */
+/***/ function(module, exports, __webpack_require__) {
+
 	// Taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
 	if (!Function.prototype.bind) {
 	  Function.prototype.bind = function (oThis) {
@@ -118,31 +148,6 @@ var ClickInterceptor =
 	    return fBound;
 	  };
 	}
-
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*jshint browser:true, node:true*/
-
-	'use strict';
-
-	/**
-	 * @preserve Create and manage a DOM event delegator.
-	 *
-	 * @version 0.3.0
-	 * @codingstandard ftlabs-jsv2
-	 * @copyright The Financial Times Limited [All Rights Reserved]
-	 * @license MIT License (see LICENSE.txt)
-	 */
-	var Delegate = __webpack_require__(3);
-
-	module.exports = function(root) {
-	  return new Delegate(root);
-	};
-
-	module.exports.Delegate = Delegate;
 
 
 /***/ },

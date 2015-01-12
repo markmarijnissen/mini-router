@@ -23,9 +23,6 @@ function Router(options) {
     if(typeof options.callback === 'function') {
       this._callback = options.callback;
     }
-    if(options.clickInterceptor || window.ClickInterceptor){
-      this.setClickInterceptor(options.clickInterceptor || window.ClickInterceptor);
-    }
 
     if(typeof options.html5 === 'undefined') options.html5 = true;
     if(options.html5 === true && 'onpopstate' in window){
@@ -38,6 +35,10 @@ function Router(options) {
       window.addEventListener('hashchange',function RouterOnHashChange(ev){
         self.set(window.location.hash.substr(1),true);
       });
+    }
+
+    if(options.clickInterceptor || window.ClickInterceptor){
+      this.setClickInterceptor(options.clickInterceptor || window.ClickInterceptor);
     }
 }
 
