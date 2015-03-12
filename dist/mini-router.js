@@ -16,8 +16,8 @@ var ClickInterceptor = function(modules) {
     __webpack_require__.p = "";
     return __webpack_require__(0);
 }([ function(module, exports, __webpack_require__) {
-    __webpack_require__(2);
-    var bodyDelegate = __webpack_require__(1)(document.body);
+    __webpack_require__(1);
+    var bodyDelegate = __webpack_require__(2)(document.body);
     var options = {
         html5: false,
         base: "",
@@ -62,13 +62,6 @@ var ClickInterceptor = function(modules) {
     window.ClickInterceptor = ClickInterceptor;
     module.exports = ClickInterceptor;
 }, function(module, exports, __webpack_require__) {
-    "use strict";
-    var Delegate = __webpack_require__(3);
-    module.exports = function(root) {
-        return new Delegate(root);
-    };
-    module.exports.Delegate = Delegate;
-}, function(module, exports, __webpack_require__) {
     if (!Function.prototype.bind) {
         Function.prototype.bind = function(oThis) {
             if (typeof this !== "function") {
@@ -82,6 +75,13 @@ var ClickInterceptor = function(modules) {
             return fBound;
         };
     }
+}, function(module, exports, __webpack_require__) {
+    "use strict";
+    var Delegate = __webpack_require__(3);
+    module.exports = function(root) {
+        return new Delegate(root);
+    };
+    module.exports.Delegate = Delegate;
 }, function(module, exports, __webpack_require__) {
     "use strict";
     module.exports = Delegate;
@@ -295,7 +295,7 @@ function Router(options) {
     };
     if (options.routes) {
         for (var id in options.routes) {
-            this.add(options.routes[id], id);
+            this.add(id, options.routes[id]);
         }
     }
     this.base = "";
@@ -395,8 +395,8 @@ Router.prototype.set = function RouterSet(url, silent) {
         if (matches !== null) {
             found = true;
             matches = matches.splice(1);
-            this._routes[i].params.forEach(function(key) {
-                params[key] = matches[key];
+            this._routes[i].params.forEach(function(key, index) {
+                params[key] = matches[index];
             });
             this._routes[i].callback(params, this._routes[i].route);
             this.current.route = this._routes[i].route;

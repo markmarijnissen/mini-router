@@ -9,7 +9,7 @@ function Router(options) {
 
     if(options.routes) {
       for(var id in options.routes){
-        this.add(options.routes[id],id);
+        this.add(id, options.routes[id]);
       }
     }
     this.base = '';
@@ -61,7 +61,7 @@ Router.prototype.normalize = function(url){
 Router.prototype.add = function RouterAdd(route,callback) {
   route = this.normalize(route);
   var i,normalizedRoute = route;
-  
+
   // check if route already exists
   for(i = 0, len = this._routes.length; i<len; i++){
     if(this._routes[i].route === normalizedRoute) {
@@ -122,8 +122,8 @@ Router.prototype.set = function RouterSet(url,silent) {
     if(matches !== null) {
       found = true;
       matches = matches.splice(1);
-      this._routes[i].params.forEach(function(key){
-        params[key] = matches[key];
+      this._routes[i].params.forEach(function(key, index){
+        params[key] = matches[index];
       });
       this._routes[i].callback(params,this._routes[i].route);
       this.current.route = this._routes[i].route;
