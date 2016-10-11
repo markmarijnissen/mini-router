@@ -2,41 +2,41 @@ var ClickInterceptor =
 /******/ (function(modules) { // webpackBootstrap
 /******/ 	// The module cache
 /******/ 	var installedModules = {};
-/******/
+
 /******/ 	// The require function
 /******/ 	function __webpack_require__(moduleId) {
-/******/
+
 /******/ 		// Check if module is in cache
 /******/ 		if(installedModules[moduleId])
 /******/ 			return installedModules[moduleId].exports;
-/******/
+
 /******/ 		// Create a new module (and put it into the cache)
 /******/ 		var module = installedModules[moduleId] = {
 /******/ 			exports: {},
 /******/ 			id: moduleId,
 /******/ 			loaded: false
 /******/ 		};
-/******/
+
 /******/ 		// Execute the module function
 /******/ 		modules[moduleId].call(module.exports, module, module.exports, __webpack_require__);
-/******/
+
 /******/ 		// Flag the module as loaded
 /******/ 		module.loaded = true;
-/******/
+
 /******/ 		// Return the exports of the module
 /******/ 		return module.exports;
 /******/ 	}
-/******/
-/******/
+
+
 /******/ 	// expose the modules object (__webpack_modules__)
 /******/ 	__webpack_require__.m = modules;
-/******/
+
 /******/ 	// expose the module cache
 /******/ 	__webpack_require__.c = installedModules;
-/******/
+
 /******/ 	// __webpack_public_path__
 /******/ 	__webpack_require__.p = "";
-/******/
+
 /******/ 	// Load entry module and return exports
 /******/ 	return __webpack_require__(0);
 /******/ })
@@ -45,8 +45,8 @@ var ClickInterceptor =
 /* 0 */
 /***/ function(module, exports, __webpack_require__) {
 
-	__webpack_require__(2);
-	var bodyDelegate = __webpack_require__(1)(document.body);
+	__webpack_require__(1);
+	var bodyDelegate = __webpack_require__(2)(document.body);
 
 	var options = {
 	  html5: false,
@@ -62,8 +62,8 @@ var ClickInterceptor =
 	function clickHandler(ev){
 	  var url = ev.target.getAttribute('href');
 	  if(url){
-	    url = options.normalize(url);
 	    if(url.substr(0,4) !== 'http') {
+	      url = options.normalize(url);
 	      if(options.html5){
 	        if(options.set) {
 	          options.set(url);
@@ -96,32 +96,7 @@ var ClickInterceptor =
 
 /***/ },
 /* 1 */
-/***/ function(module, exports, __webpack_require__) {
-
-	/*jshint browser:true, node:true*/
-
-	'use strict';
-
-	/**
-	 * @preserve Create and manage a DOM event delegator.
-	 *
-	 * @version 0.3.0
-	 * @codingstandard ftlabs-jsv2
-	 * @copyright The Financial Times Limited [All Rights Reserved]
-	 * @license MIT License (see LICENSE.txt)
-	 */
-	var Delegate = __webpack_require__(3);
-
-	module.exports = function(root) {
-	  return new Delegate(root);
-	};
-
-	module.exports.Delegate = Delegate;
-
-
-/***/ },
-/* 2 */
-/***/ function(module, exports, __webpack_require__) {
+/***/ function(module, exports) {
 
 	// Taken from https://developer.mozilla.org/en-US/docs/Web/JavaScript/Reference/Global_Objects/Function/bind
 	if (!Function.prototype.bind) {
@@ -151,8 +126,33 @@ var ClickInterceptor =
 
 
 /***/ },
-/* 3 */
+/* 2 */
 /***/ function(module, exports, __webpack_require__) {
+
+	/*jshint browser:true, node:true*/
+
+	'use strict';
+
+	/**
+	 * @preserve Create and manage a DOM event delegator.
+	 *
+	 * @version 0.3.0
+	 * @codingstandard ftlabs-jsv2
+	 * @copyright The Financial Times Limited [All Rights Reserved]
+	 * @license MIT License (see LICENSE.txt)
+	 */
+	var Delegate = __webpack_require__(3);
+
+	module.exports = function(root) {
+	  return new Delegate(root);
+	};
+
+	module.exports.Delegate = Delegate;
+
+
+/***/ },
+/* 3 */
+/***/ function(module, exports) {
 
 	/*jshint browser:true, node:true*/
 
@@ -586,4 +586,4 @@ var ClickInterceptor =
 
 
 /***/ }
-/******/ ])
+/******/ ]);

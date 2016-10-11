@@ -13,7 +13,7 @@ bower install mini-router
 * `dist/mini-router.core.js` - Router without ClickInterceptor (standalone library)
 * `dist/mini-router.js` - Router + ClickInterceptor (standalone library)
 * `router.js` - CommonJS module (use with webpack or browserify)
-* `ClickInterceptor.js` - CommonJS module 
+* `ClickInterceptor.js` - CommonJS module
 
 ## Usage
 ```javascript
@@ -34,7 +34,7 @@ router.add('/route/:param1',function(params){
 // Manually set location and fire route handler
 router.set(url)
 
-// Normalize URL; 
+// Normalize URL;
 // - remove domain name.
 router.normalize('http://yourwebsite.com/some/path/') // /some/path
 // - remove ending slash
@@ -64,6 +64,7 @@ So I wrote this one!
 
 ## Changelog
 
+* 0.5.0: Bugfix
 * 0.4.0: Fixed ClickInterceptor bug with HTML5 (there is no `onpushstate` listener, so explicitly call `router.set(url)`)
 * 0.3.0: Fixed some versioning issues with NPM and Bower
 * 0.2.0: Split Router into Router + ClickInterceptor. Some minor improvements.

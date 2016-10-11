@@ -15,8 +15,8 @@ document.addEventListener('DOMContentLoaded',function(){
 function clickHandler(ev){
   var url = ev.target.getAttribute('href');
   if(url){
-    url = options.normalize(url);
     if(url.substr(0,4) !== 'http') {
+      url = options.normalize(url);
       if(options.html5){
         if(options.set) {
           options.set(url);

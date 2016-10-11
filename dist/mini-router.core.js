@@ -60,19 +60,20 @@ Router.prototype.normalize = function(url){
 
 Router.prototype.add = function RouterAdd(route,callback) {
   route = this.normalize(route);
+  callback = callback || this._callback;
   var i,normalizedRoute = route;
-  
+
   // check if route already exists
   for(i = 0, len = this._routes.length; i<len; i++){
     if(this._routes[i].route === normalizedRoute) {
-      this._routes[i] = callback || this._callback;
+      this._routes[i].callback = callback;
       return;
     }
   }
 
   // check for 'otherwise' route
   if(route === '/*') {
-    this._otherwise = callback || this._callback;
+    this._otherwise = callback;
     return route;
   }
 
@@ -91,7 +92,7 @@ Router.prototype.add = function RouterAdd(route,callback) {
     route: normalizedRoute,
     regex: new RegExp(route),
     params: keys,
-    callback: callback || this._callback
+    callback: callback
   });
   return route;
 };
@@ -108,7 +109,8 @@ Router.prototype.set = function RouterSet(url,silent) {
   var current = this.html5? location.href: location.hash.substr(1);
   url = this.normalize(url || current);
   if(this.html5 && !silent){
-    history.pushState({url:url},url,url);
+    var fullUrl = this.base? this.base + url: url;
+    history.pushState({url:fullUrl},fullUrl,fullUrl);
   } else if(!silent){
     location.hash = url;
   }
@@ -122,8 +124,8 @@ Router.prototype.set = function RouterSet(url,silent) {
     if(matches !== null) {
       found = true;
       matches = matches.splice(1);
-      this._routes[i].params.forEach(function(key){
-        params[key] = matches[key];
+      this._routes[i].params.forEach(function(key,index){
+        params[key] = matches[index];
       });
       this._routes[i].callback(params,this._routes[i].route);
       this.current.route = this._routes[i].route;

@@ -16,8 +16,8 @@ var ClickInterceptor = function(modules) {
     __webpack_require__.p = "";
     return __webpack_require__(0);
 }([ function(module, exports, __webpack_require__) {
-    __webpack_require__(2);
-    var bodyDelegate = __webpack_require__(1)(document.body);
+    __webpack_require__(1);
+    var bodyDelegate = __webpack_require__(2)(document.body);
     var options = {
         html5: false,
         base: "",
@@ -32,8 +32,8 @@ var ClickInterceptor = function(modules) {
     function clickHandler(ev) {
         var url = ev.target.getAttribute("href");
         if (url) {
-            url = options.normalize(url);
             if (url.substr(0, 4) !== "http") {
+                url = options.normalize(url);
                 if (options.html5) {
                     if (options.set) {
                         options.set(url);
@@ -61,14 +61,7 @@ var ClickInterceptor = function(modules) {
     ClickInterceptor.stop = stopClickInterceptor;
     window.ClickInterceptor = ClickInterceptor;
     module.exports = ClickInterceptor;
-}, function(module, exports, __webpack_require__) {
-    "use strict";
-    var Delegate = __webpack_require__(3);
-    module.exports = function(root) {
-        return new Delegate(root);
-    };
-    module.exports.Delegate = Delegate;
-}, function(module, exports, __webpack_require__) {
+}, function(module, exports) {
     if (!Function.prototype.bind) {
         Function.prototype.bind = function(oThis) {
             if (typeof this !== "function") {
@@ -83,6 +76,13 @@ var ClickInterceptor = function(modules) {
         };
     }
 }, function(module, exports, __webpack_require__) {
+    "use strict";
+    var Delegate = __webpack_require__(3);
+    module.exports = function(root) {
+        return new Delegate(root);
+    };
+    module.exports.Delegate = Delegate;
+}, function(module, exports) {
     "use strict";
     module.exports = Delegate;
     function Delegate(root) {
@@ -342,15 +342,16 @@ Router.prototype.normalize = function(url) {
 
 Router.prototype.add = function RouterAdd(route, callback) {
     route = this.normalize(route);
+    callback = callback || this._callback;
     var i, normalizedRoute = route;
     for (i = 0, len = this._routes.length; i < len; i++) {
         if (this._routes[i].route === normalizedRoute) {
-            this._routes[i] = callback || this._callback;
+            this._routes[i].callback = callback;
             return;
         }
     }
     if (route === "/*") {
-        this._otherwise = callback || this._callback;
+        this._otherwise = callback;
         return route;
     }
     var keys;
@@ -366,7 +367,7 @@ Router.prototype.add = function RouterAdd(route, callback) {
         route: normalizedRoute,
         regex: new RegExp(route),
         params: keys,
-        callback: callback || this._callback
+        callback: callback
     });
     return route;
 };
@@ -383,9 +384,10 @@ Router.prototype.set = function RouterSet(url, silent) {
     var current = this.html5 ? location.href : location.hash.substr(1);
     url = this.normalize(url || current);
     if (this.html5 && !silent) {
+        var fullUrl = this.base ? this.base + url : url;
         history.pushState({
-            url: url
-        }, url, url);
+            url: fullUrl
+        }, fullUrl, fullUrl);
     } else if (!silent) {
         location.hash = url;
     }
@@ -395,8 +397,8 @@ Router.prototype.set = function RouterSet(url, silent) {
         if (matches !== null) {
             found = true;
             matches = matches.splice(1);
-            this._routes[i].params.forEach(function(key) {
-                params[key] = matches[key];
+            this._routes[i].params.forEach(function(key, index) {
+                params[key] = matches[index];
             });
             this._routes[i].callback(params, this._routes[i].route);
             this.current.route = this._routes[i].route;
