@@ -28,7 +28,7 @@ function Router(options) {
     if(options.html5 === true && 'onpopstate' in window){
       this.html5 = true;
       window.addEventListener('popstate',function RouterOnPopState(ev){
-        self.set(ev.state.url,true);
+        if(ev.state) self.set(ev.state.url,true);
       });
     } else {
       this.html5 = false;
@@ -52,6 +52,9 @@ Router.prototype.normalize = function(url){
   }
   if(url.substr(0,this.base.length) === this.base){
     url = url.substr(this.base.length);
+  }
+  if(url.substr(url.length - location.hash.length) === location.hash){
+    url = url.substr(0, url.length - location.hash.length);
   }
   if(url[0] !== '/') url = '/' + url;
   if(url.length > 1 && url[url.length-1] === '/') url = url.substr(0,url.length-1);
